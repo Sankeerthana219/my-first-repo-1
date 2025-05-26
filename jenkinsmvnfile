@@ -1,2 +1,59 @@
-:wq
+pipeline {
+    agent any
+    tools {
+        maven 'Maven 3.8.6'
+        jdk 'JDK 11'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/your-repo/your-maven-project.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    withMaven(maven: 'Maven 3.8.6') {
+                        sh 'mvn clean install'
+                    }
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    withMaven(maven: 'Maven 3.8.6') {
+                        sh 'mvn test'
+                    }
+                }
+            }
+        }
+        stage('compile') {
+            steps {
+                script {
+                    withMaven(maven: 'Maven 3.8.6') {
+                        sh 'mvn compile'
+                    }
+                }
+            }
+         stage('Deploy') {
+            steps {
+                script {
+                    withMaven(maven: 'Maven 3.8.6') {
+                        sh 'mvn deploy'
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Build, Test, and Deploy stages completed successfully.'
+        }
+        failure {
+            echo 'One or more stages failed.'
+        }
+    }
+}
+
 
